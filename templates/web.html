@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+		<meta http-equiv = "cache-control" content = "no-cache">
+		<title>Bacon - Web Graph</title>
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"/>-->
+        <style>
+            canvas {
+                border : 1px solid #d3d3d3;
+                background-color : #f1f1f1;
+            }
+        </style>
+    </head>
+    <body onload="initiateWeb(actorList, movieList, connObj);">
+        <script>
+        var actorList = [];
+        {% for actor in actors %}
+            actorList.push([{{ actor.id }}, "{{ actor.name }}"]);
+        {% endfor %}
+        var movieList = [];
+        {% for movie_id in movie_dict %}
+            movieList.push([{{ movie_dict[movie_id].id }}, "{{ movie_dict[movie_id].name }}"]);
+        {% endfor %}
+        var connObj = {};
+        var temp;
+        {% for connection in connections %}
+            temp = [];
+            {% for mo_id in connections[connection] %}
+                temp.push({{ mo_id }});
+            {% endfor %}
+            connObj["{{ connection }}"] = temp;
+        {% endfor %}
+        //console.log(connObj);
+        </script>
+        <script src = "/assets/js/web.js"></script>
+    </body>
+</html>
