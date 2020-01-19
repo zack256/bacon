@@ -20,13 +20,14 @@ def build_graph(edges):
 
 def shortest_path (edges, source, dest = None):
     # if dest == None, then will find the shortest paths to all nodes. else, will find the shortest distance to dest as well as the previous node on the shortest path.
+    # edges is a list of lists. each list contains [x, y, r]; three ints, x and y are nodes while r is the weight between them.
     graph = build_graph(edges)
-    unvisited = {source : [0, None]}
+    unvisited = {source : [0, None]}    # each value of both the unvisited and visited dicts are [distance, previous node].
     visited = {}
     focus = source
     while True:
         if focus == dest:
-            return unvisited[dest]
+            return [unvisited[dest], visited]
         connections = graph[focus]
         for node in connections:
             if node in visited:

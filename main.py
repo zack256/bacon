@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import config.config
 import config.paths
 import datetime
+import work.shortest_path
 
 app = Flask(__name__)
 
@@ -172,6 +173,69 @@ def web_graph_pg_handle():
                 else:
                     connections[ke].append(m_id)
     return render_template("web.html", actors = actors, connections = connections, movie_dict = movie_dict)
+
+@app.route("/manual/bacon")
+@app.route("/manual/bacon/")
+def bacon_pg_handler():
+    # only actors to start.
+    id1 = request.args.get("a1", "", int)
+    id2 = request.args.get("a2", "", int)
+    if id1 == id2:
+        return "Can't do the same actor!"
+    edges = []
+    roles = Role.query.all()
+    actors = Actor.query.all()
+    movies = Movie.query.all()
+    for role in roles:
+        edge_list = [role.actor_id, -role.movie_id, 1]
+        edges.append(edge_list)
+    shortest_path_results = work.shortest_path.shortest_path(edges = edges, source = id1, dest = id2)
+    if type(shortest_path_results) == dict: # only the visited dict returned, thus there are 2+ seperate groups and there is no connection between the requested pair of actors.
+        actor1 = Actor.query.get(id1)
+        actor2 = Actor.query.get(id2)
+        return render_template("bacon.html", success = False, actor1 = actor1, actor2 = actor2)
+    else:   # connection found.
+        dest_list, visited = shortest_path_results
+        dist, prev = dest_list
+        path_dict = {id2 : None}
+        path_list = [id2]
+        while True:
+            path_dict[prev] = None
+            path_list.append(prev)
+            if prev == id1:
+                break
+            prev = visited[prev][1]
+        for ac in actors:
+            if ac.id in path_dict:
+                path_dict[ac.id] = ac
+        for mo in movies:
+            if -mo.id in path_dict:
+                path_dict[-mo.id] = mo
+        path_list.reverse()
+        return render_template("bacon.html", success = True, path_dict = path_dict, path_list = path_list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
