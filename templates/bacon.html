@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 {% if success %}
-<h3 class = "title is-3">Degrees between {{ path_dict[path_list[0]].name }} and {{ path_dict[path_list[-1]].name }}</h3>
+<h3 class = "title is-3">Degrees between {{ path_dict[path_list[0]].name }} and {{ path_dict[path_list[-1]].name }} : {{ path_list|length // 2 }}</h3>
 <div class = "content">
     <ul>
         {% for node_idx in path_list %}
@@ -15,7 +15,7 @@
     </ul>
 </div>
 {% else %}
-<h3 class = "title is-3">Degrees between {{ actor1.name }} and {{ actor2.name }}</h3>
+<h3 class = "title is-3">Degrees between {{ actor1.name }} and {{ actor2.name }} : None?!</h3>
 <p>Could not find a connection between <a href = "/manual/actors/{{ actor1.id }}/">{{ actor1.name }}</a> and <a href = "/manual/actors/{{ actor2.id }}/">{{ actor2.name }}</a>!</p>
 {% endif %}
 <h5 class = "subtitle is-5"><a href = "/manual/">Manual Home</a></h5>
