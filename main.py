@@ -4,6 +4,7 @@ import config.config
 import config.paths
 import datetime
 import work.shortest_path
+import csv
 
 app = Flask(__name__)
 
@@ -49,7 +50,7 @@ def home_page_handler():
 def manual_page_handler():
     actors = Actor.query.all()
     movies = Movie.query.all()
-    actors = sorted(actors, key = lambda x : x.name)    # hmm maybe needa do fname/lname...
+    actors = sorted(actors, key = lambda x : x.name)
     movies = sorted(movies, key = lambda x : (x.name, x.year))
     return render_template("manual.html", actors = actors, movies = movies)
 
@@ -107,6 +108,18 @@ def add_role_form_handle():
     db.session.add(role)
     db.session.commit()
     return redirect("/manual/")
+
+@app.route("/manual/actors")
+@app.route("/manual/actors/")
+def actors_page_handle():
+    actors = sorted(Actor.query.all(), key = lambda x : x.name)
+    return render_template("actors.html", actors = actors)
+
+@app.route("/manual/movies")
+@app.route("/manual/movies/")
+def movies_page_handle():
+    movies = sorted(Movie.query.all(), key = lambda x : x.name)
+    return render_template("movies.html", movies = movies)
 
 @app.route("/manual/actors/<int:aid>")
 @app.route("/manual/actors/<int:aid>/")
@@ -213,24 +226,6 @@ def bacon_pg_handler():
                 path_dict[-mo.id] = mo
         path_list.reverse()
         return render_template("bacon.html", success = True, path_dict = path_dict, path_list = path_list)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
