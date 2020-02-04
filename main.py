@@ -2,9 +2,11 @@ from flask import Flask, render_template, redirect, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 import config.config
 import config.paths
+import config.constants
 import datetime
 import work.shortest_path
 import csv
+import random
 
 app = Flask(__name__)
 
@@ -48,11 +50,13 @@ def home_page_handler():
 @app.route("/manual")
 @app.route("/manual/")
 def manual_page_handler():
-    actors = Actor.query.all()
-    movies = Movie.query.all()
-    actors = sorted(actors, key = lambda x : x.name)
-    movies = sorted(movies, key = lambda x : (x.name, x.year))
-    return render_template("manual.html", actors = actors, movies = movies)
+    all_actors = Actor.query.all()
+    all_movies = Movie.query.all()
+    #actors = sorted(actors, key = lambda x : x.name)
+    #movies = sorted(movies, key = lambda x : (x.name, x.year))
+    actors = random.sample(all_actors, config.constants.MANUAL_HOME_ACTORS_SHOWN)
+    movies = random.sample(all_movies, config.constants.MANUAL_HOME_MOVIES_SHOWN)
+    return render_template("manual.html", actors = actors, movies = movies, all_actors = all_actors, all_movies = all_movies)
 
 @app.route("/assets/<path:file_path>")
 def get_asset_file(file_path):
@@ -226,10 +230,6 @@ def bacon_pg_handler():
                 path_dict[-mo.id] = mo
         path_list.reverse()
         return render_template("bacon.html", success = True, path_dict = path_dict, path_list = path_list)
-
-
-
-
 
 
 

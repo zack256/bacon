@@ -72,17 +72,6 @@
         <section class="modal-card-body">
             <script>var addRoleSubmitted = false;</script>
             <form id = "addRoleForm" action = "/manual/forms/add-role/" method = "POST" onsubmit = "if (addRoleSubmitted) { return false; } else { if (addRoleCheck()) { addRoleSubmitted = true; return true; } else { return false; } }"></form>
-            <datalist id = "actorDL">
-                {% for ac in actors %}
-                <option value = "{{ ac.name }}"></option>
-                {% endfor %}
-            </datalist>
-            <datalist id = "movieDL">
-                {% for mo in movies %}
-                {# <option value = "{{ mo.name }}{% if mo.year %} ({{ mo.year }}){% endif %}"></option> #}
-                <option value = "{{ mo.name }}"></option>
-                {% endfor %}
-            </datalist>
             <table class = "table is-striped is-fullwidth">
                 <tbody>
                     <tr>
@@ -106,6 +95,33 @@
         </footer>
     </div>
 </div>
+<div class = "modal mft" id = "doBacon">
+    <div class="modal-background" onclick = "deactivateModal('doBacon');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Find Connection</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('doBacon');"></button>
+        </header>
+        <section class="modal-card-body">
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Actor 1</td>
+                        <td><input id = "doBaconActor1" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" list = "actorDL"></td>
+                    </tr>
+                    <tr>
+                        <td>Actor 2</td>
+                        <td><input id = "doBaconActor2" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" list = "actorDL"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" onclick = "clickBaconForm(actorObj);">Submit</button>
+            <button class = "button is-danger" onclick = "resetBaconForm();">Cancel</button>
+        </footer>
+    </div>
+</div>
 {% endblock %}
 {% block body %}
 <h3 class = "title is-3">Manual</h3>
@@ -114,11 +130,12 @@
     <button class = "button is-warning" onclick = "activateModal('addActor');">Add Actor</button>
     <button class = "button is-info" onclick = "activateModal('addMovie');">Add Movie</button>
     <button class = "button is-success" onclick = "activateModal('addRole');">Add Role</button>
+    <button class = "button is-danger" onclick = "activateModal('doBacon');">Find Connection</button>
 </div>
 <br/>
 <div class = "columns">
     <div class = "column">
-        <h5 class = "subtitle is-5">Actors</h5>
+        <h5 class = "subtitle is-5">Actors <a href = "/manual/actors/">(view all)</a></h5>
         <table class = "table is-striped is-bordered">
             <thead>
                 <tr>
@@ -139,7 +156,7 @@
         </table>
     </div>
     <div class = "column">
-        <h5 class = "subtitle is-5">Movies</h5>
+        <h5 class = "subtitle is-5">Movies <a href = "/manual/movies/">(view all)</a></h5>
         <table class = "table is-striped is-bordered">
             <thead>
                 <tr>
@@ -158,4 +175,23 @@
         </table>
     </div>
 </div>
+{% endblock %}
+{% block more_bottom %}
+<script src = "/assets/js/bacon_form.js"></script>
+<script>
+var actorObj = {};
+{% for ac in all_actors %}
+actorObj["{{ ac.name }}"] = "{{ ac.id }}";
+{% endfor %}
+</script>
+<datalist id = "actorDL">
+    {% for ac in all_actors %}
+    <option value = "{{ ac.name }}"></option>
+    {% endfor %}
+</datalist>
+<datalist id = "movieDL">
+    {% for mo in all_movies %}
+    <option value = "{{ mo.name }}"></option>
+    {% endfor %}
+</datalist>
 {% endblock %}
