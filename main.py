@@ -17,6 +17,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
+#---Testing DB (below)---
 class Actor (db.Model):
     __tablename__ = "actors"
     id = db.Column(db.Integer, primary_key = True)
@@ -42,6 +43,31 @@ class Role(db.Model):
     notes = db.Column(db.String(80))    # optional.
     actor = db.relationship(Actor, backref = "movies_backref")
     movie = db.relationship(Movie, backref = "actors_backref")
+#---Testing DB (above)---
+
+class AutoActor (db.Model):
+    __tablename__ = "a_actors"
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(120))
+    csv_id = db.Column(db.Integer, unique = True)
+    movies = db.relationship("AutoRole")
+
+class AutoMovie (db.Model):
+    __tablename__ = "a_movies"
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(120))
+    csv_id = db.Column(db.Integer, unique = True)
+    actors = db.relationship("AutoRole")
+
+class AutoRole (db.Model):
+    __tablename__ = "a_roles"
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    #actor_id = db.Column(db.Integer(), db.ForeignKey('a_actors.id'), primary_key = True, autoincrement = False)
+    #movie_id = db.Column(db.Integer(), db.ForeignKey('a_movies.id'), primary_key = True, autoincrement = False)
+    actor_id = db.Column(db.Integer(), db.ForeignKey('a_actors.csv_id'), primary_key = True, autoincrement = False)
+    movie_id = db.Column(db.Integer(), db.ForeignKey('a_movies.csv_id'), primary_key = True, autoincrement = False)
+    actor = db.relationship(AutoActor, backref = "a_movies_backref")
+    movie = db.relationship(AutoMovie, backref = "a_actors_backref")
 
 @app.route("/")
 def home_page_handler():
@@ -231,6 +257,23 @@ def bacon_pg_handler():
         path_list.reverse()
         return render_template("bacon.html", success = True, path_dict = path_dict, path_list = path_list)
 
+@app.route("/db/actors/<int:aid>")
+@app.route("/db/actors/<int:aid>/")
+def db_actor_pg_handle(aid):
+    actor = AutoActor.query.get(aid)
+    if actor == None:
+        return "Actor not found!"
+    movies = sorted([role.movie for role in actor.movies], key = lambda x : [x.title])
+    return render_template("db/actor.html", actor = actor, movies = movies)
 
+@app.route("/db/movies/<int:mid>")
+@app.route("/db/movies/<int:mid>/")
+def db_movie_pg_handle(mid):
+    movie = AutoMovie.query.get(mid)
+    if movie == None:
+        return "Movie not found!"
+    app.logger.error([movie, movie.title, movie.id, movie.csv_id])
+    actors = sorted([role.actor for role in movie.actors], key = lambda x : [x.name])
+    return render_template("db/movie.html", movie = movie, actors = actors)
 
 
