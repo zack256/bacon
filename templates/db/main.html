@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block modals %}
+<div class = "modal mft" id = "addActor">
+    <div class="modal-background" onclick = "deactivateModal('addActor');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Actor</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('addActor');"></button>
+        </header>
+        <section class="modal-card-body">
+            <script>var addActorSubmitted = false;</script>
+            <form id = "addActorForm" action = "/db/forms/add-actor/" method = "POST" onsubmit = "if (addActorSubmitted) { return false; } else { if (addActorCheck()) { addActorSubmitted = true; return true; } else { return false; } }"></form>
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td><input name = "name" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" required = "required" form = "addActorForm"></td>
+                    </tr>
+                    <tr>
+                        <td>Birth Year</td>
+                        <td><input name = "born" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "addActorForm"></td>
+                    </tr>
+                    <tr>
+                        <td>Death Year</td>
+                        <td><input name = "dead" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "addActorForm"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" type = "submit" form = "addActorForm">Submit</button>
+            <button class = "button is-danger" type = "reset" form = "addActorForm">Cancel</button>
+        </footer>
+    </div>
+</div>
+<div class = "modal mft" id = "addMovie">
+    <div class="modal-background" onclick = "deactivateModal('addMovie');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Movie</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('addMovie');"></button>
+        </header>
+        <section class="modal-card-body">
+            <script>var addMovieSubmitted = false;</script>
+            <form id = "addMovieForm" action = "/db/forms/add-movie/" method = "POST" onsubmit = "if (addMovieSubmitted) { return false; } else { if (addMovieCheck()) { addMovieSubmitted = true; return true; } else { return false; } }"></form>
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td><input name = "name" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. :]+$" required = "required" form = "addMovieForm"></td>
+                    </tr>
+                    <tr>
+                        <td>Year</td>
+                        <td><input name = "year" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "addMovieForm"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" type = "submit" form = "addMovieForm">Submit</button>
+            <button class = "button is-danger" type = "reset" form = "addMovieForm">Cancel</button>
+        </footer>
+    </div>
+</div>
+<div class = "modal mft" id = "addRole">
+    <div class="modal-background" onclick = "deactivateModal('addRole');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Role</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('addRole');"></button>
+        </header>
+        <section class="modal-card-body">
+            <script>var addRoleSubmitted = false;</script>
+            <form id = "addRoleForm" action = "/db/forms/add-role/" method = "POST" onsubmit = "if (addRoleSubmitted) { return false; } else { if (addRoleCheck()) { addRoleSubmitted = true; return true; } else { return false; } }"></form>
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Actor</td>
+                        <td><input name = "actor" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" required = "required" form = "addRoleForm" list = "actorDL"></td>
+                    </tr>
+                    <tr>
+                        <td>Movie</td>
+                        <td><input name = "movie" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. :]+$" required = "required" form = "addRoleForm" list = "movieDL"></td>
+                    </tr>
+                    <tr>
+                        <td>Notes</td>
+                        <td><input name = "notes" type = "text" class = "input" maxlength = "160" form = "addRoleForm"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" type = "submit" form = "addRoleForm">Submit</button>
+            <button class = "button is-danger" type = "reset" form = "addRoleForm">Cancel</button>
+        </footer>
+    </div>
+</div>
+<div class = "modal mft" id = "doBacon">
+    <div class="modal-background" onclick = "deactivateModal('doBacon');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Find Connection</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('doBacon');"></button>
+        </header>
+        <section class="modal-card-body">
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Actor 1</td>
+                        <td><input id = "doBaconActor1" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" list = "actorDL"></td>
+                    </tr>
+                    <tr>
+                        <td>Actor 2</td>
+                        <td><input id = "doBaconActor2" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" list = "actorDL"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" onclick = "clickBaconForm(actorObj, True);">Submit</button>
+            <button class = "button is-danger" onclick = "resetBaconForm();">Cancel</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}
+{% block body %}
+<h3 class = "title is-3">Degrees of Seperation</h3>
+<div class = "buttons">
+    <button class = "button is-warning" onclick = "activateModal('addActor');">Add Actor</button>
+    <button class = "button is-info" onclick = "activateModal('addMovie');">Add Movie</button>
+    <button class = "button is-success" onclick = "activateModal('addRole');">Add Role</button>
+    <button class = "button is-danger" onclick = "activateModal('doBacon');">Find Connection</button>
+</div>
+<br/>
+<div class = "columns">
+    <div class = "column">
+        <h5 class = "subtitle is-5">Actors <a href = "/db/actors/">(view all)</a></h5>
+        <table class = "table is-striped is-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    {# <th>Born</th> #}
+                    {# <th>Died</th> #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in actors %}
+                <tr>
+                    <td><a href = "/db/actors/{{ a.id }}/">{{ a.name }}</a></td>
+                    {# <td>{% if a.born %}{{ a.born }}{% endif %}</td> #}
+                    {# <td>{% if a.dead %}{{ a.dead }}{% endif %}</td> #}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class = "column">
+        <h5 class = "subtitle is-5">Movies <a href = "/db/movies/">(view all)</a></h5>
+        <table class = "table is-striped is-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    {# <th>Year</th> #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in movies %}
+                <tr>
+                    <td><a href = "/db/movies/{{ m.id }}/">{{ m.title }}</a></td>
+                    {# <td>{% if m.year %}{{ m.year }}{% endif %}</td> #}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block more_bottom %}
+<script src = "/assets/js/bacon_form.js"></script>
+{% endblock %}

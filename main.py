@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.expression import func as sql_func
 import config.config
 import config.paths
 import config.constants
@@ -275,5 +276,17 @@ def db_movie_pg_handle(mid):
     app.logger.error([movie, movie.title, movie.id, movie.csv_id])
     actors = sorted([role.actor for role in movie.actors], key = lambda x : [x.name])
     return render_template("db/movie.html", movie = movie, actors = actors)
+
+@app.route("/db")
+@app.route("/db/")
+def db_home_pg_handle():
+    rand_actors = AutoActor.query.order_by(sql_func.random()).limit(config.constants.DB_HOME_ACTORS_SHOWN).all()
+    rand_movies = AutoMovie.query.order_by(sql_func.random()).limit(config.constants.DB_HOME_MOVIES_SHOWN).all()
+    return render_template("db/main.html", actors = rand_actors, movies = rand_movies)
+
+
+
+
+
 
 
