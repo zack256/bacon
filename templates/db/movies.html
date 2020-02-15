@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Movies{% endblock %}
+{% block body %}
+<h3 class = "title is-3">Movies</h3>
+<h5 class = "subtitle is-5">Showing {{ movies|length }} out of {{ total_matches }}.</h5>
+{% if query == "" %}
+<p>No query specified. Ordering by ID instead.</p>
+{% else %}
+<p>Query : {{ query }}</p>
+{% endif %}
+{% if total_matches == 0 %}
+<p>No movies had titles that matched the query.</p>
+{% else %}
+<table class = "table is-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movie in movies %}
+        <tr>
+            <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.title }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>Currently on page {{ page }} out of {{ total_pages }}.</p>
+{% endif %}
+<h5 class = "subtitle is-5"><a href = "/db/">Database Home</a></h5>
+{% endblock %}

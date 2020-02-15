@@ -8,6 +8,7 @@ import datetime
 import work.shortest_path
 import csv
 import random
+import math
 
 app = Flask(__name__)
 
@@ -284,7 +285,55 @@ def db_home_pg_handle():
     rand_movies = AutoMovie.query.order_by(sql_func.random()).limit(config.constants.DB_HOME_MOVIES_SHOWN).all()
     return render_template("db/main.html", actors = rand_actors, movies = rand_movies)
 
+@app.route("/db/actors")
+@app.route("/db/actors/")
+def db_actors_pg_handle():
+    query = request.args.get("query", "", str)
+    page = request.args.get("page", 1, int)
+    actor_query = AutoActor.query.filter(AutoActor.name.like(query + "%"))
+    total_matches = actor_query.count()
+    if total_matches == 0:
+        return render_template("db/actors.html", total_matches = total_matches, query = query, actors = [])
+    shown = config.constants.DB_ACTORS_PG_SHOWN_PER_PAGE
+    total_pages = math.ceil(total_matches / shown)
+    if page < 1 or page % 1 != 0:
+        page = 1
+    elif page > total_pages:
+        page = total_pages
+    offset = (page - 1) * shown
+    if query == "":
+        actors = actor_query.order_by(AutoActor.id).offset(offset).limit(shown).all()  # if no query is specified, sorts by ID. if this isn't happening then the actors shown will be ones with weird names with quotes at the front, not ideal.
+    else:
+        actors = actor_query.order_by(AutoActor.name).offset(offset).limit(shown).all()
+    return render_template("db/actors.html", actors = actors, total_matches = total_matches, page = page, total_pages = total_pages, query = query)
 
+@app.route("/db/movies")
+@app.route("/db/movies/")
+def db_movies_pg_handle():
+    query = request.args.get("query", "", str)
+    page = request.args.get("page", 1, int)
+    movie_query = AutoMovie.query.filter(AutoMovie.title.like(query + "%"))
+    total_matches = movie_query.count()
+    if total_matches == 0:
+        return render_template("db/movies.html", total_matches = total_matches, query = query, movies = [])
+    shown = config.constants.DB_MOVIES_PG_SHOWN_PER_PAGE
+    total_pages = math.ceil(total_matches / shown)
+    if page < 1 or page % 1 != 0:
+        page = 1
+    elif page > total_pages:
+        page = total_pages
+    offset = (page - 1) * shown
+    if query == "":
+        movies = movie_query.order_by(AutoMovie.id).offset(offset).limit(shown).all()
+    else:
+        movies = movie_query.order_by(AutoMovie.title).offset(offset).limit(shown).all()
+    return render_template("db/movies.html", movies = movies, total_matches = total_matches, page = page, total_pages = total_pages, query = query)
+
+def remove_leading_spaces_from_all_entries():
+    # single use, hopefully.
+    for actor in AutoActor.query.all():
+        actor.name = actor.name.strip()
+    db.session.commit()
 
 
 
