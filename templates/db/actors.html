@@ -26,6 +26,43 @@
     </tbody>
 </table>
 <p>Currently on page {{ page }} out of {{ total_pages }}.</p>
+<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    <a class="pagination-previous" {% if page == 1 %}disabled{% else %}href = "/db/actors/?query={{ query }}&page={{ page - 1 }}"{% endif %}>Previous</a>
+    <a class="pagination-next" {% if page == total_pages %}disabled{% else %}href = "/db/actors/?query={{ query }}&page={{ page + 1 }}"{% endif %}>Next page</a>
+    <ul class="pagination-list">
+        {% if total_pages < 9 %}
+        {% for pg in range(1, total_pages + 1) %}
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ pg }}">{{ pg }}</a></li>
+        {% endfor %}
+        {% else  %}
+        {% if page < 5 %}
+        {% for pg in range(1, page + 2) %}
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ pg }}">{{ pg }}</a></li>
+        {% endfor %}
+        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ total_pages - 1 }}">{{ total_pages - 1 }}</a></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ total_pages }}">{{ total_pages }}</a></li>
+        {% elif page > total_pages - 4 %}
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ 1 }}">{{ 1 }}</a></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ 2 }}">{{ 2 }}</a></li>
+        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        {% for pg in range(page - 1, total_pages + 1) %}
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ pg }}">{{ pg }}</a></li>
+        {% endfor %}
+        {% else %}
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ 1 }}">{{ 1 }}</a></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ 2 }}">{{ 2 }}</a></li>
+        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ page - 1 }}">{{ page - 1 }}</a></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ page }}">{{ page }}</a></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ page + 1 }}">{{ page + 1 }}</a></li>
+        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ total_pages - 1 }}">{{ total_pages - 1 }}</a></li>
+        <li><a class="pagination-link" href = "/db/actors/?query={{ query }}&page={{ total_pages }}">{{ total_pages }}</a></li>
+        {% endif %}
+        {% endif %}
+    </ul>
+</nav>
 {% endif %}
 <h5 class = "subtitle is-5"><a href = "/db/">Database Home</a></h5>
 {% endblock %}
