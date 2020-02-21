@@ -73,7 +73,8 @@ class AutoRole (db.Model):
 
 @app.route("/")
 def home_page_handler():
-    return render_template("index.html")
+    #return render_template("index.html")
+    return redirect("/db/")
 
 @app.route("/manual")
 @app.route("/manual/")
@@ -334,6 +335,11 @@ def remove_leading_spaces_from_all_entries():
     for actor in AutoActor.query.all():
         actor.name = actor.name.strip()
     db.session.commit()
+
+@app.route("/db/bacon")
+@app.route("/db/bacon/")
+def db_bacon_page():
+    return "bacon page..."
 
 
 
