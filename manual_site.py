@@ -44,7 +44,7 @@ def manual_page_handler():
     #movies = sorted(movies, key = lambda x : (x.name, x.year))
     actors = random.sample(all_actors, config.constants.MANUAL_HOME_ACTORS_SHOWN)
     movies = random.sample(all_movies, config.constants.MANUAL_HOME_MOVIES_SHOWN)
-    return render_template("manual.html", actors = actors, movies = movies, all_actors = all_actors, all_movies = all_movies)
+    return render_template("manual/manual.html", actors = actors, movies = movies, all_actors = all_actors, all_movies = all_movies)
 
 @app.route("/manual/forms/add-actor/", methods = ["POST"])
 def add_actor_form_handle():
@@ -100,13 +100,13 @@ def add_role_form_handle():
 @app.route("/manual/actors/")
 def actors_page_handle():
     actors = sorted(Actor.query.all(), key = lambda x : x.name)
-    return render_template("actors.html", actors = actors)
+    return render_template("manual/actors.html", actors = actors)
 
 @app.route("/manual/movies")
 @app.route("/manual/movies/")
 def movies_page_handle():
     movies = sorted(Movie.query.all(), key = lambda x : x.name)
-    return render_template("movies.html", movies = movies)
+    return render_template("manual/movies.html", movies = movies)
 
 @app.route("/manual/actors/<int:aid>")
 @app.route("/manual/actors/<int:aid>/")
@@ -123,7 +123,7 @@ def manual_actor_pg_handle(aid):
     for role in roles:
         role_list.append([movie_dict[role.movie_id], role.notes])
     role_list = sorted(role_list, key = lambda x : (x[0].name, x[0].year))
-    return render_template("actor.html", actor = actor, movies = role_list)
+    return render_template("manual/actor.html", actor = actor, movies = role_list)
 
 @app.route("/manual/movies/<int:mid>")
 @app.route("/manual/movies/<int:mid>/")
@@ -140,7 +140,7 @@ def manual_movie_pg_handle(mid):
     for role in roles:
         role_list.append([actor_dict[role.actor_id], role.notes])
     role_list = sorted(role_list, key = lambda x : (x[0].name))
-    return render_template("movie.html", movie = movie, actors = role_list)
+    return render_template("manual/movie.html", movie = movie, actors = role_list)
 
 @app.route("/manual/web")
 @app.route("/manual/web/")
@@ -172,7 +172,7 @@ def web_graph_pg_handle():
                     connections[ke] = [m_id]
                 else:
                     connections[ke].append(m_id)
-    return render_template("web.html", actors = actors, connections = connections, movie_dict = movie_dict)
+    return render_template("manual/web.html", actors = actors, connections = connections, movie_dict = movie_dict)
 
 @app.route("/manual/bacon")
 @app.route("/manual/bacon/")
@@ -193,7 +193,7 @@ def bacon_pg_handler():
     if type(shortest_path_results) == dict: # only the visited dict returned, thus there are 2+ seperate groups and there is no connection between the requested pair of actors.
         actor1 = Actor.query.get(id1)
         actor2 = Actor.query.get(id2)
-        return render_template("bacon.html", success = False, actor1 = actor1, actor2 = actor2)
+        return render_template("manual/bacon.html", success = False, actor1 = actor1, actor2 = actor2)
     else:   # connection found.
         dest_list, visited = shortest_path_results
         dist, prev = dest_list
@@ -212,5 +212,5 @@ def bacon_pg_handler():
             if -mo.id in path_dict:
                 path_dict[-mo.id] = mo
         path_list.reverse()
-        return render_template("bacon.html", success = True, path_dict = path_dict, path_list = path_list)
+        return render_template("manual/bacon.html", success = True, path_dict = path_dict, path_list = path_list)
 
