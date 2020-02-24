@@ -14,7 +14,7 @@
     <tbody>
         {% for movie in movies %}
         <tr>
-            <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.title }}</a></td>
+            <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.format_title() }}</a></td>
         </tr>
         {% endfor %}
     </tbody>

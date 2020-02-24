@@ -19,15 +19,37 @@ class AutoActor (db.Model):
     __tablename__ = "a_actors"
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(120))
+    born = db.Column(db.Integer)
+    died = db.Column(db.Integer)
+    note = db.Column(db.String(1024))
+    is_manual = db.Column(db.Boolean)
     csv_id = db.Column(db.Integer, unique = True)
     movies = db.relationship("AutoRole")
+
+    def format_name(self):
+        if self.born:
+            if self.died:
+                return self.name + " (" + str(self.born) + "-" + str(self.died) + ")"
+            return self.name + " (b." + str(self.born) + ")"
+        if self.died:
+            return self.name + " (d." + str(self.died) + ")"
+        return self.name
+
 
 class AutoMovie (db.Model):
     __tablename__ = "a_movies"
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(120))
+    year = db.Column(db.Integer)
+    note = db.Column(db.String(1024))
+    is_manual = db.Column(db.Boolean)
     csv_id = db.Column(db.Integer, unique = True)
     actors = db.relationship("AutoRole")
+
+    def format_title(self):
+        if self.year:
+            return self.title + " (" + str(self.year) + ")"
+        return self.title
 
 class AutoRole (db.Model):
     __tablename__ = "a_roles"
@@ -129,6 +151,7 @@ def remove_leading_spaces_from_all_entries():
 @app.route("/db/bacon/")
 def db_bacon_page():
     return "bacon page..."
+
 
 
 
