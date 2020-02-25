@@ -23,7 +23,6 @@ class AutoActor (db.Model):
     died = db.Column(db.Integer)
     note = db.Column(db.String(1024))
     is_manual = db.Column(db.Boolean)
-    csv_id = db.Column(db.Integer, unique = True)
     movies = db.relationship("AutoRole")
 
     def format_name(self):
@@ -43,7 +42,6 @@ class AutoMovie (db.Model):
     year = db.Column(db.Integer)
     note = db.Column(db.String(1024))
     is_manual = db.Column(db.Boolean)
-    csv_id = db.Column(db.Integer, unique = True)
     actors = db.relationship("AutoRole")
 
     def format_title(self):
@@ -54,10 +52,8 @@ class AutoMovie (db.Model):
 class AutoRole (db.Model):
     __tablename__ = "a_roles"
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    #actor_id = db.Column(db.Integer(), db.ForeignKey('a_actors.id'), primary_key = True, autoincrement = False)
-    #movie_id = db.Column(db.Integer(), db.ForeignKey('a_movies.id'), primary_key = True, autoincrement = False)
-    actor_id = db.Column(db.Integer(), db.ForeignKey('a_actors.csv_id'), primary_key = True, autoincrement = False)
-    movie_id = db.Column(db.Integer(), db.ForeignKey('a_movies.csv_id'), primary_key = True, autoincrement = False)
+    actor_id = db.Column(db.Integer(), db.ForeignKey('a_actors.id'), primary_key = True, autoincrement = False)
+    movie_id = db.Column(db.Integer(), db.ForeignKey('a_movies.id'), primary_key = True, autoincrement = False)
     actor = db.relationship(AutoActor, backref = "a_movies_backref")
     movie = db.relationship(AutoMovie, backref = "a_actors_backref")
 
@@ -86,7 +82,6 @@ def db_movie_pg_handle(mid):
     movie = AutoMovie.query.get(mid)
     if movie == None:
         return "Movie not found!"
-    app.logger.error([movie, movie.title, movie.id, movie.csv_id])
     actors = sorted([role.actor for role in movie.actors], key = lambda x : [x.name])
     return render_template("db/movie.html", movie = movie, actors = actors)
 
@@ -151,10 +146,6 @@ def remove_leading_spaces_from_all_entries():
 @app.route("/db/bacon/")
 def db_bacon_page():
     return "bacon page..."
-
-
-
-
 
 
 
