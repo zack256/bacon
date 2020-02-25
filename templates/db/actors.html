@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block more_top %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
 {% block title %}Actors{% endblock %}
 {% block body %}
 <h3 class = "title is-3">Actors</h3>
@@ -8,6 +11,18 @@
 {% else %}
 <p>Query : {{ query }}</p>
 {% endif %}
+<div class="field has-addons">
+    <div class="control">
+        <input class="input" type="text" placeholder="Search..." value = "{{ query }}" id = "searchBar">
+    </div>
+    <div class="control">
+        <a class="button is-danger" onclick = "clearSearch();">
+            <span class="icon">
+                <i class="fa fa-times"></i>
+            </span>
+        </a>
+    </div>
+</div>
 {% if total_matches == 0 %}
 <p>No actors had names that matched the query.</p>
 {% else %}
@@ -70,6 +85,14 @@
 <script src = "/assets/js/pagination.js"></script>
 <script>
     var body = document.getElementsByTagName("BODY")[0];
-    body.onload = function () {selectCurrentPage("{{ page }}");};
+    body.onload = function () {
+        selectCurrentPage("{{ page }}");
+        document.getElementById("searchBar").onkeyup = function(e) {
+            if (e.keyCode == 13) {
+                // Enter/Return Key
+                doSearch(true);
+            }
+        };
+    };
 </script>
 {% endblock %}
