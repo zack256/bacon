@@ -14,7 +14,6 @@ import manual_site as manual
 
 app = start_db.app; db = start_db.db
 
-
 class AutoActor (db.Model):
     __tablename__ = "a_actors"
     id = db.Column(db.Integer, primary_key = True)
@@ -33,7 +32,6 @@ class AutoActor (db.Model):
         if self.died:
             return self.name + " (d." + str(self.died) + ")"
         return self.name
-
 
 class AutoMovie (db.Model):
     __tablename__ = "a_movies"
@@ -147,6 +145,42 @@ def remove_leading_spaces_from_all_entries():
 def db_bacon_page():
     return "bacon page..."
 
+@app.route("/db/forms/add-actor/", methods = ["POST"])
+def db_add_actor_form_handle():
+    name = request.form["name"]
+    born = request.form["born"]
+    died = request.form["died"]
+    note = request.form["note"]
+    actor = AutoActor()
+    if name == "":
+        return "Name can't be blank!"
+    actor.name = name
+    if born:
+        actor.born = int(born)
+    if died:
+        actor.died = int(died)
+    actor.note = note
+    actor.is_manual = True
+    db.session.add(actor)
+    db.session.commit()
+    return redirect("/db/actors/{}/".format(actor.id))
+
+@app.route("/db/forms/add-movie/", methods = ["POST"])
+def db_add_movie_form_handle():
+    title = request.form["title"]
+    year = request.form["year"]
+    note = request.form["note"]
+    movie = AutoMovie()
+    if title == "":
+        return "Title can't be blank!"
+    movie.title = title
+    if year:
+        movie.year = int(year)
+    movie.note = note
+    movie.is_manual = True
+    db.session.add(movie)
+    db.session.commit()
+    return redirect("/db/movies/{}/".format(movie.id))
 
 
 

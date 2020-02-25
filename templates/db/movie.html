@@ -4,6 +4,9 @@
 {% endblock %}
 {% block body %}
 <h3 class = "title is-3">{{ movie.title }}</h3>
+{% if movie.year %}<p>Year - {{ movie.year }}</p>{% endif %}
+{% if movie.note %}<p>Comments - {{ movie.note }}</p>{% endif %}
+<br/>
 <h5 class = "subtitle is-5">Actors</h5>
 <table class = "table is-striped">
     <thead>
@@ -19,5 +22,10 @@
         {% endfor %}
     </tbody>
 </table>
+{% if movie.is_manual %}
+<p>This movie was added to the database manually.</p>
+{% else %}
+<p>This movie was one of the many imported to the database initially.</p>
+{% endif %}
 <h5 class = "subtitle is-5"><a href = "/db/">Database Home</a></h5>
 {% endblock %}

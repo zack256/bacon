@@ -14,7 +14,7 @@
                 <tbody>
                     <tr>
                         <td>Name</td>
-                        <td><input name = "name" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. ]+$" required = "required" form = "addActorForm"></td>
+                        <td><input name = "name" type = "text" class = "input" maxlength = "80" required = "required" form = "addActorForm"></td>
                     </tr>
                     <tr>
                         <td>Birth Year</td>
@@ -22,7 +22,11 @@
                     </tr>
                     <tr>
                         <td>Death Year</td>
-                        <td><input name = "dead" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "addActorForm"></td>
+                        <td><input name = "died" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "addActorForm"></td>
+                    </tr>
+                    <tr>
+                        <td>Notes</td>
+                        <td><input name = "note" type = "text" class = "input" maxlength = "80" form = "addActorForm"></td>
                     </tr>
                 </tbody>
             </table>
@@ -46,12 +50,16 @@
             <table class = "table is-striped is-fullwidth">
                 <tbody>
                     <tr>
-                        <td>Name</td>
-                        <td><input name = "name" type = "text" class = "input" maxlength = "80" pattern = "^[a-zA-Z0-9\-_. :]+$" required = "required" form = "addMovieForm"></td>
+                        <td>Title</td>
+                        <td><input name = "title" type = "text" class = "input" maxlength = "80" required = "required" form = "addMovieForm"></td>
                     </tr>
                     <tr>
                         <td>Year</td>
                         <td><input name = "year" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "addMovieForm"></td>
+                    </tr>
+                    <tr>
+                        <td>Notes</td>
+                        <td><input name = "note" type = "text" class = "input" maxlength = "80" form = "addMovieForm"></td>
                     </tr>
                 </tbody>
             </table>
