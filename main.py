@@ -182,5 +182,64 @@ def db_add_movie_form_handle():
     db.session.commit()
     return redirect("/db/movies/{}/".format(movie.id))
 
+def bridge_helper(l, home_dict, away_dict):
+    c = l.pop(0)
+    if c > 0:   # Actor
+        focus = AutoActor.query.get(c)
+        for role in focus.movies:
+            idx = -role.movie_id
+            if idx in home_dict:
+                continue
+            l.append(idx)
+            home_dict[idx] = [home_dict[c][0] + 1, c]
+            if idx in away_dict:
+                return idx
+    else:   # Movie
+        focus = AutoMovie.query.get(-c)
+        for role in focus.actors:
+            idx = role.actor_id
+            if idx in home_dict:
+                continue
+            l.append(idx)
+            home_dict[idx] = [home_dict[c][0] + 1, c]
+            if idx in away_dict:
+                return idx
+    return None
+
+def bridge_bfs(a1, a2):
+    if a1 == a2:
+        return "same"
+    d1 = {a1 : [0, None]}; d2 = {a2 : [0, None]}; l1 = [a1]; l2 = [a2]
+    while True:
+        if len(l1) == 0 or len(l2) == 0:
+            return "no connection"
+        match = bridge_helper(l1, d1, d2)
+        if match:
+            break
+        match = bridge_helper(l2, d2, d1)
+        if match:
+            break
+    path = []; cu = match
+    while cu != None:
+        if cu > 0:
+            focus = AutoActor.query.get(cu)
+            path.append(focus.name)
+        else:
+            focus = AutoMovie.query.get(-cu)
+            path.append(focus.title)
+        cu = d1[cu][1]
+    path2 = []; cu = d2[match][1]
+    while cu != None:
+        if cu > 0:
+            focus = AutoActor.query.get(cu)
+            path2.append(focus.name)
+        else:
+            focus = AutoMovie.query.get(-cu)
+            path2.append(focus.title)
+        cu = d2[cu][1]
+    return path[::-1] + path2
+
+
+
 
 
