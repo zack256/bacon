@@ -1,3 +1,4 @@
+// For manual only.
 function resetBaconForm () {
     document.getElementById("doBaconActor1").value = "";
     document.getElementById("doBaconActor2").value = "";

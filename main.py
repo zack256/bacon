@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, send_from_directory
+from flask import Flask, render_template, redirect, request, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import func as sql_func
 import config.config
@@ -140,11 +140,6 @@ def remove_leading_spaces_from_all_entries():
         actor.name = actor.name.strip()
     db.session.commit()
 
-@app.route("/db/bacon")
-@app.route("/db/bacon/")
-def db_bacon_page():
-    return "bacon page..."
-
 @app.route("/db/forms/add-actor/", methods = ["POST"])
 def db_add_actor_form_handle():
     name = request.form["name"]
@@ -238,6 +233,31 @@ def bridge_bfs(a1, a2):
             path2.append(focus.title)
         cu = d2[cu][1]
     return path[::-1] + path2
+
+@app.route("/db/bacon")
+@app.route("/db/bacon/")
+def db_bacon_page():
+    return render_template("db/bacon.html")
+
+@app.route("/db/ajax/get-actor/")
+def ajax_get_actor():
+    a_id = request.args.get("a_id", 0, int)
+    fail = False
+    if a_id == 0:
+        fail = True
+    else:
+        actor = AutoActor.query.get(a_id)
+        if actor:
+            res = actor.name
+        else:
+            fail = True
+    if fail:
+        res = "No actor was found with that ID!"
+    return jsonify(actor = res)
+
+
+
+
 
 
 

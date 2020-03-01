@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Find Connections{% endblock %}
+{% block body %}
+<h3 class = "title is-3">Find Connections</h3>
+<div class = "columns">
+    <div class = "column">
+        <h5 class = "subtitle is-5">Actor 1</h5>
+        <p>Enter the ID of an Actor into the box below. You can also copy and paste an ID by searching the <a href = "/db/actors/" target = "_blank">database</a>.</p>
+        <input class = "input baconActorInput" autocomplete = "off" id = "actor1input" type = "text" placeholder = "Enter an Actor's ID.">
+        <button class = "button is-danger baconActorCancel" onclick = "document.getElementById('actor1input').value = '';">Cancel</button>
+        <hr>
+        <h5 class = "subtitle is-5">Actor 2</h5>
+        <p>Enter the ID of an Actor into the box below. You can also copy and paste an ID by searching the <a href = "/db/actors/" target = "_blank">database</a>.</p>
+        <input class = "input baconActorInput" autocomplete = "off" id = "actor2input" type = "text" placeholder = "Enter an Actor's ID.">
+        <button class = "button is-danger baconActorCancel" onclick = "document.getElementById('actor1input').value = '';">Cancel</button>
+        <hr>
+        <button class = "button is-success" id = "baconButton">Find Connection</button>
+    </div>
+    <div class = "column">
+        <h5 class = "subtitle is-5">Results</h5>
+    </div>
+</div>
+<h5 class = "subtitle is-5"><a href = "/db/">Database Home</a></h5>
+{% endblock %}
+{% block more_bottom %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type = "text/javascript">
+    $SCRIPT_ROOT = "";
+    var ajaxUrl = $SCRIPT_ROOT + '/db/ajax/get-actor/';
+</script>
+<script type=text/javascript>
+    $(function() {
+        $('input#actor1input').bind('keyup', function() {
+            $.getJSON(ajaxUrl, {
+                a_id: $("#actor1input").val()
+            }, function(data) {
+                console.log(data.actor);
+            });
+            return false;
+        });
+    });
+</script>
+{% endblock %}

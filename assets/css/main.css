@@ -4,3 +4,11 @@ body {
 .subtitle {
     margin-bottom : 0 !important;
 }
+.baconActorInput {
+    width : 50% !important;
+    margin-top : 0.5em !important;
+    margin-bottom : 0.5em !important;
+}
+.baconActorCancel {
+    margin-top : 0.5em !important;
+}
