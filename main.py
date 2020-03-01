@@ -253,7 +253,7 @@ def ajax_get_actor():
             fail = True
     if fail:
         res = "No actor was found with that ID!"
-    return jsonify(actor = res)
+    return jsonify(actor = res, a_id = a_id, success = not fail)
 
 
 
