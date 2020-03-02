@@ -16,10 +16,30 @@
         <button class = "button is-danger baconActorCancel" onclick = "resetBacon(2);">Cancel</button>
         <p id = "baconMsg2"></p>
         <hr>
-        <button class = "button is-success" id = "baconButton">Find Connection</button>
+        <button class = "button is-success" onclick = "baconSearch();">Find Connection</button>
     </div>
     <div class = "column">
         <h5 class = "subtitle is-5">Results</h5>
+        <div class = "content">
+            {% if case == 1 %}{# Invalid actor(s). Case 0 is skipped because nothing is displayed. #}
+            <p>One or both of the IDs entered had no matches in the database.</p>
+            {% elif case == 2 %}{# Same actors. #}
+            <p><a href = "/db/actors/{{ path_list[0].id }}/">{{ path_list[0].name }}</a> has a degree of 0 with <a href = "/db/actors/{{ path_list[0].id }}/">{{ path_list[0].name }}</a>!</p>
+            {% elif case == 4 %}{# No connection found. #}
+            <p>There was no connection found in the database between <a href = "/db/actors/{{ path_list[0].id }}/">{{ path_list[0].name }}</a> and <a href = "/db/actors/{{ path_list[1].id }}/">{{ path_list[1].name }}</a>.</p>
+            {% else %}{# Case 3 : Successful connection found. #}
+            <ul>
+            {% for idx in range(path_list|length) %}
+            {% set node_id = path_list[idx] %}
+            {% if node_id > 0 %}
+            <li><a href = "/db/actors/{{ path_dict[node_id].id }}/">{{ path_dict[node_id].name }}</a>{% if idx == 0 %} was in{% elif idx == path_list|length - 1 %}.{% else %}, who was in{% endif %}</li>
+            {% else %}
+            <li><a href = "/db/movies/{{ path_dict[node_id].id }}/">{{ path_dict[node_id].title }}</a>, which had</li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
     </div>
 </div>
 <h5 class = "subtitle is-5"><a href = "/db/">Database Home</a></h5>

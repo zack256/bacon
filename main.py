@@ -203,11 +203,11 @@ def bridge_helper(l, home_dict, away_dict):
 
 def bridge_bfs(a1, a2):
     if a1 == a2:
-        return "same"
+        return [a1]
     d1 = {a1 : [0, None]}; d2 = {a2 : [0, None]}; l1 = [a1]; l2 = [a2]
     while True:
         if len(l1) == 0 or len(l2) == 0:
-            return "no connection"
+            return False
         match = bridge_helper(l1, d1, d2)
         if match:
             break
@@ -217,27 +217,58 @@ def bridge_bfs(a1, a2):
     path = []; cu = match
     while cu != None:
         if cu > 0:
-            focus = AutoActor.query.get(cu)
-            path.append(focus.name)
+            path.append(cu)
         else:
-            focus = AutoMovie.query.get(-cu)
-            path.append(focus.title)
+            path.append(cu)
         cu = d1[cu][1]
     path2 = []; cu = d2[match][1]
     while cu != None:
         if cu > 0:
-            focus = AutoActor.query.get(cu)
-            path2.append(focus.name)
+            path2.append(cu)
         else:
-            focus = AutoMovie.query.get(-cu)
-            path2.append(focus.title)
+            path2.append(cu)
         cu = d2[cu][1]
     return path[::-1] + path2
 
 @app.route("/db/bacon")
 @app.route("/db/bacon/")
 def db_bacon_page():
-    return render_template("db/bacon.html")
+    a1_id_str = request.args.get("a1", "", str)
+    a2_id_str = request.args.get("a2", "", str)
+    case = 0    # case 0: no actors specified.
+    path_dict = {}; path_list = []
+    if a1_id_str == a2_id_str == "":    # both empties, probably a page reload.
+        pass
+    else:
+        try:
+            a_id_1 = int(a1_id_str); a_id_2 = int(a2_id_str)
+        except:
+            case = 1    # case 1 : invalid actor(s).
+        if case == 1:
+            pass
+        else:
+            a1 = AutoActor.query.get(a_id_1)
+            a2 = AutoActor.query.get(a_id_2)
+            if a1 == None or a2 == None:
+                case = 1
+            elif a1 == a2:
+                case = 2    # case 2 : same actors.
+                path_list = [AutoActor.query.get(a_id_1)]   # the actor is sent for jinja to display.
+            else:
+                path_list = bridge_bfs(a_id_1, a_id_2)
+                if path_list:
+                    case = 3    # case 3 : successful path found.
+                    for path_node in path_list:
+                        if path_node > 0:   # actor
+                            node = AutoActor.query.get(path_node)
+                            path_dict[path_node] = node
+                        else:   # movie
+                            node = AutoMovie.query.get(-path_node)
+                            path_dict[path_node] = node
+                else:
+                    case = 4    # case 4 : no connection found- there are seperate groups of actors in the database.
+                    path_list = [a1, a2]
+    return render_template("db/bacon.html", case = case, path_dict = path_dict, path_list = path_list)
 
 @app.route("/db/ajax/get-actor/")
 def ajax_get_actor():

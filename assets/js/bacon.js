@@ -26,3 +26,14 @@ function setBaconMsg (which, name, aID, success) {
         }
     }
 }
+
+function baconSearch () {
+    var actor1 = document.getElementById("actor1input").value;
+    var actor2 = document.getElementById("actor2input").value;
+    if (isNaN(actor1) || isNaN(actor2) || actor1 == "" || actor2 == "") {
+        alert("Invalid input(s).");
+        return false;
+    } else {
+        window.location.href = "/db/bacon/?a1=" + actor1 + "&a2=" + actor2;
+    }
+}
