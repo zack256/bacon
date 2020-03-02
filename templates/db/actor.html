@@ -2,12 +2,26 @@
 {% block title %}
 {{ actor.name }}
 {% endblock %}
+{% block more_top %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
 {% block body %}
 <h3 class = "title is-3">Actor - {{ actor.name }}</h3>
 {% if actor.born %}<p>Born - {{ actor.born }}</p>{% endif %}
 {% if actor.died %}<p>Died - {{ actor.died }}</p>{% endif %}
 {% if actor.note %}<p>Comments - {{ actor.note }}</p>{% endif %}
 <br/>
+<input class = "copyInput" id = "ci" value = "{{ actor.id }}">
+<div class = "buttons">
+    <button class = "button is-info is-small" onclick = "copyTextFromElement('ci');">
+        <span class="icon">
+            <i class="fa fa-copy"></i>
+        </span>
+        <span>Copy ID</span>
+    </button>
+    <button class = "button is-success is-small">Edit</button>
+    <button class = "button is-danger is-small">Delete</button>
+</div>
 <h5 class = "subtitle is-5">Movies</h5>
 <table class = "table is-striped">
     <thead>
@@ -28,5 +42,8 @@
 {% else %}
 <p>This actor was one of the many imported to the database initially.</p>
 {% endif %}
-<h5 class = "subtitle is-5"><a href = "/db/">Database Home</a></h5>
+<h5 class = "subtitle is-5"><a href = "/db/">Database Home</a> | <a href = "/db/actors/">All Actors</a></h5>
+{% endblock %}
+{% block more_bottom %}
+<script src = "/assets/js/copy.js"></script>
 {% endblock %}

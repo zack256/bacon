@@ -12,3 +12,7 @@ body {
 .baconActorCancel {
     margin-top : 0.5em !important;
 }
+.copyInput {
+    position : absolute;
+    left : -9999px; /* display : none and type = "hidden" did not let auto-copy. */
+}
