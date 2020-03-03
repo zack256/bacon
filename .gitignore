@@ -2,4 +2,8 @@
 __pycache__
 config/config.py
 config/paths.py
-test.py
+templates/manual/*
+assets/js/bacon_form.js
+assets/js/web.js
+work/shortest_path.py
+manual_site.py
