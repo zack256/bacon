@@ -72,7 +72,7 @@ def db_actor_pg_handle(aid):
     if actor == None:
         return "Actor not found!"
     movies = sorted([role.movie for role in actor.movies], key = lambda x : [x.title])
-    return render_template("db/actor.html", actor = actor, movies = movies)
+    return render_template("actor.html", actor = actor, movies = movies)
 
 @app.route("/db/movies/<int:mid>")
 @app.route("/db/movies/<int:mid>/")
@@ -81,14 +81,14 @@ def db_movie_pg_handle(mid):
     if movie == None:
         return "Movie not found!"
     actors = sorted([role.actor for role in movie.actors], key = lambda x : [x.name])
-    return render_template("db/movie.html", movie = movie, actors = actors)
+    return render_template("movie.html", movie = movie, actors = actors)
 
 @app.route("/db")
 @app.route("/db/")
 def db_home_pg_handle():
     rand_actors = AutoActor.query.order_by(sql_func.random()).limit(config.constants.DB_HOME_ACTORS_SHOWN).all()
     rand_movies = AutoMovie.query.order_by(sql_func.random()).limit(config.constants.DB_HOME_MOVIES_SHOWN).all()
-    return render_template("db/main.html", actors = rand_actors, movies = rand_movies)
+    return render_template("main.html", actors = rand_actors, movies = rand_movies)
 
 @app.route("/db/actors")
 @app.route("/db/actors/")
@@ -98,7 +98,7 @@ def db_actors_pg_handle():
     actor_query = AutoActor.query.filter(AutoActor.name.like(query + "%"))
     total_matches = actor_query.count()
     if total_matches == 0:
-        return render_template("db/actors.html", total_matches = total_matches, query = query, actors = [])
+        return render_template("actors.html", total_matches = total_matches, query = query, actors = [])
     shown = config.constants.DB_ACTORS_PG_SHOWN_PER_PAGE
     total_pages = math.ceil(total_matches / shown)
     if page < 1 or page % 1 != 0:
@@ -110,7 +110,7 @@ def db_actors_pg_handle():
         actors = actor_query.order_by(AutoActor.id).offset(offset).limit(shown).all()  # if no query is specified, sorts by ID. if this isn't happening then the actors shown will be ones with weird names with quotes at the front, not ideal.
     else:
         actors = actor_query.order_by(AutoActor.name).offset(offset).limit(shown).all()
-    return render_template("db/actors.html", actors = actors, total_matches = total_matches, page = page, total_pages = total_pages, query = query)
+    return render_template("actors.html", actors = actors, total_matches = total_matches, page = page, total_pages = total_pages, query = query)
 
 @app.route("/db/movies")
 @app.route("/db/movies/")
@@ -120,7 +120,7 @@ def db_movies_pg_handle():
     movie_query = AutoMovie.query.filter(AutoMovie.title.like(query + "%"))
     total_matches = movie_query.count()
     if total_matches == 0:
-        return render_template("db/movies.html", total_matches = total_matches, query = query, movies = [])
+        return render_template("movies.html", total_matches = total_matches, query = query, movies = [])
     shown = config.constants.DB_MOVIES_PG_SHOWN_PER_PAGE
     total_pages = math.ceil(total_matches / shown)
     if page < 1 or page % 1 != 0:
@@ -132,7 +132,7 @@ def db_movies_pg_handle():
         movies = movie_query.order_by(AutoMovie.id).offset(offset).limit(shown).all()
     else:
         movies = movie_query.order_by(AutoMovie.title).offset(offset).limit(shown).all()
-    return render_template("db/movies.html", movies = movies, total_matches = total_matches, page = page, total_pages = total_pages, query = query)
+    return render_template("movies.html", movies = movies, total_matches = total_matches, page = page, total_pages = total_pages, query = query)
 
 def remove_leading_spaces_from_all_entries():
     # single use, hopefully.
@@ -268,7 +268,7 @@ def db_bacon_page():
                 else:
                     case = 4    # case 4 : no connection found- there are seperate groups of actors in the database.
                     path_list = [a1, a2]
-    return render_template("db/bacon.html", case = case, path_dict = path_dict, path_list = path_list)
+    return render_template("bacon.html", case = case, path_dict = path_dict, path_list = path_list)
 
 @app.route("/db/ajax/get-actor/")
 def ajax_get_actor():
