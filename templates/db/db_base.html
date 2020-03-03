@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8">
+		<meta http-equiv = "cache-control" content = "no-cache">
+		<title>{% block title %}Bacon{% endblock %}</title>
+		<link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"/>
+		<link rel = "stylesheet" href = "/assets/css/main.css">
+		<link rel = "stylesheet" href = "/assets/css/modals.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		{% block more_top %}{% endblock %}
+	</head>
+	<body>
+	    {% block modals %}{% endblock %}
+		{% block body %}{% endblock %}
+		<script src = "/assets/js/modals.js"></script>
+		<script src = "/assets/js/checks.js"></script>
+		<script src = "/assets/js/search.js"></script>
+		<script src = "/assets/js/copy.js"></script>
+		{% block more_bottom %}{% endblock %}
+	</body>
+</html>

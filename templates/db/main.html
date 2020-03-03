@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "db/db_base.html" %}
 {% block modals %}
 <div class = "modal mft" id = "addActor">
     <div class="modal-background" onclick = "deactivateModal('addActor');"></div>
@@ -103,7 +103,6 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    {# <th>Year</th> #}
                 </tr>
             </thead>
             <tbody>
@@ -116,7 +115,4 @@
         </table>
     </div>
 </div>
-{% endblock %}
-{% block more_bottom %}
-<script src = "/assets/js/bacon_form.js"></script>
 {% endblock %}

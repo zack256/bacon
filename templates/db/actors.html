@@ -1,8 +1,5 @@
-{% extends "base.html" %}
+{% extends "db/db_base.html" %}
 {% block title %}Actors{% endblock %}
-{% block more_top %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-{% endblock %}
 {% block body %}
 <h3 class = "title is-3">Actors</h3>
 <h5 class = "subtitle is-5">Showing {{ actors|length }} out of {{ total_matches }}.</h5>
@@ -95,7 +92,6 @@
 {% endblock %}
 {% block more_bottom %}
 <script src = "/assets/js/pagination.js"></script>
-<script src = "/assets/js/copy.js"></script>
 <script>
     var body = document.getElementsByTagName("BODY")[0];
     body.onload = function () {

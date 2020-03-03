@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "manual/base.html" %}
 {% block body %}
 {% if success %}
 <h3 class = "title is-3">Degrees between {{ path_dict[path_list[0]].name }} and {{ path_dict[path_list[-1]].name }} : {{ path_list|length // 2 }}</h3>
