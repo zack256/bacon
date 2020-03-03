@@ -27,12 +27,22 @@
     <thead>
         <tr>
             <th>Title</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         {% for movie in movies %}
         <tr>
             <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.format_title() }}</a></td>
+            <td>
+                <input class = "copyInput" id = "ci{{ movie.id }}" value = "{{ movie.id }}">
+                <button class="button is-info is-small" onclick = "copyTextFromElement('ci{{ movie.id }}');">
+                    <span class="icon">
+                        <i class="fa fa-copy"></i>
+                    </span>
+                    <span>Copy ID</span>
+                </button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

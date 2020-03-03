@@ -5,12 +5,10 @@ import config.config
 import config.paths
 import config.constants
 import datetime
-import work.shortest_path
 import csv
 import random
 import math
 import start_db
-import manual_site as manual
 
 app = start_db.app; db = start_db.db
 
@@ -52,6 +50,7 @@ class AutoRole (db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     actor_id = db.Column(db.Integer(), db.ForeignKey('a_actors.id'), primary_key = True, autoincrement = False)
     movie_id = db.Column(db.Integer(), db.ForeignKey('a_movies.id'), primary_key = True, autoincrement = False)
+    is_manual = db.Column(db.Boolean)
     actor = db.relationship(AutoActor, backref = "a_movies_backref")
     movie = db.relationship(AutoMovie, backref = "a_actors_backref")
 
