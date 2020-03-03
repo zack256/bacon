@@ -2,3 +2,4 @@
 __pycache__
 config/config.py
 config/paths.py
+test.py
