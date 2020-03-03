@@ -2,6 +2,3 @@
 __pycache__
 config/config.py
 config/paths.py
-templates/manual/*
-assets/js/bacon_form.js
-assets/js/web.js
