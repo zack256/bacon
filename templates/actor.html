@@ -60,7 +60,10 @@
     </button>
     <button class = "button is-warning is-small">Add Movie</button>
     <button class = "button is-success is-small" onclick = "activateModal('editActor');">Edit</button>
-    <button class = "button is-danger is-small">Delete</button>
+    <script>var deleteActorSubmitted = false;</script>
+    <form id = "deleteActorForm" action = "/db/forms/delete-actor/" method = "POST" onsubmit = "if (deleteActorSubmitted) { return false; } else { if (deleteActorCheck({{ delete_mode }})) { deleteActorSubmitted = true; return true; } else { return false; } }"></form>
+    <input form = "deleteActorForm" name = "a_id" value = "{{ actor.id }}" type = "hidden">
+    <button class = "button is-danger is-small" type = "submit" form = "deleteActorForm">Delete</button>
 </div>
 <h5 class = "subtitle is-5">Movies</h5>
 <table class = "table is-striped">

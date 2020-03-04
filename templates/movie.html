@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ movie.name }}{% endblock %}
+{% block title %}{{ movie.title }}{% endblock %}
 {% block modals %}
 <div class = "modal mft" id = "editMovie">
     <div class="modal-background" onclick = "deactivateModal('editMovie');"></div>
@@ -55,7 +55,10 @@
     </button>
     <button class = "button is-warning is-small">Add Actor</button>
     <button class = "button is-success is-small" onclick = "activateModal('editMovie');">Edit</button>
-    <button class = "button is-danger is-small">Delete</button>
+    <script>var deleteMovieSubmitted = false;</script>
+    <form id = "deleteMovieForm" action = "/db/forms/delete-movie/" method = "POST" onsubmit = "if (deleteMovieSubmitted) { return false; } else { if (deleteMovieCheck({{ delete_mode }})) { deleteMovieSubmitted = true; return true; } else { return false; } }"></form>
+    <input form = "deleteMovieForm" name = "m_id" value = "{{ movie.id }}" type = "hidden">
+    <button class = "button is-danger is-small" type = "submit" form = "deleteMovieForm">Delete</button>
 </div>
 <h5 class = "subtitle is-5">Actors</h5>
 <table class = "table is-striped">

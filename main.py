@@ -71,7 +71,13 @@ def db_actor_pg_handle(aid):
     if actor == None:
         return "Actor not found!"
     movies = sorted([role.movie for role in actor.movies], key = lambda x : [x.title])
-    return render_template("actor.html", actor = actor, movies = movies)
+    if not actor.is_manual: # delete_mode is used to tell the user if the actor/movie can be deleted.
+        delete_mode = 0     # 0 : can't be deleted as it came from the original import, and its better if those aren't deleted.
+    elif movies != []:
+        delete_mode = 1     # 1 : has movies attached, better to have the user confirm he wants to delete the actor by manually deleting each role.
+    else:
+        delete_mode = 2     # 2 : can delete.
+    return render_template("actor.html", actor = actor, movies = movies, delete_mode = delete_mode)
 
 @app.route("/db/movies/<int:mid>")
 @app.route("/db/movies/<int:mid>/")
@@ -80,7 +86,13 @@ def db_movie_pg_handle(mid):
     if movie == None:
         return "Movie not found!"
     actors = sorted([role.actor for role in movie.actors], key = lambda x : [x.name])
-    return render_template("movie.html", movie = movie, actors = actors)
+    if not movie.is_manual:
+        delete_mode = 0
+    elif actors != []:
+        delete_mode = 1
+    else:
+        delete_mode = 2
+    return render_template("movie.html", movie = movie, actors = actors, delete_mode = delete_mode)
 
 @app.route("/db")
 @app.route("/db/")
@@ -220,6 +232,34 @@ def db_edit_movie_form_handle():
     movie.note = note
     db.session.commit()
     return redirect("/db/movies/{}/".format(movie.id))
+
+@app.route("/db/forms/delete-actor/", methods = ["POST"])
+def db_delete_actor_form_handle():
+    a_id = request.form["a_id"]
+    actor = AutoActor.query.get(int(a_id))
+    if actor == None:
+        return "Actor doesn't exist!"
+    if not actor.is_manual:
+        return "Can't delete an Actor that was added to the database initially."
+    if actor.movies != []:
+        return "Can't delete an Actor that has movies!"
+    db.session.delete(actor)
+    db.session.commit()
+    return redirect("/db/actors/")
+
+@app.route("/db/forms/delete-movie/", methods = ["POST"])
+def db_delete_movie_form_handle():
+    m_id = request.form["m_id"]
+    movie = AutoMovie.query.get(int(m_id))
+    if movie == None:
+        return "Movie doesn't exist!"
+    if not movie.is_manual:
+        return "Can't delete a Movie that was added to the database initially."
+    if movie.actors != []:
+        return "Can't delete a Movie that has actors!"
+    db.session.delete(movie)
+    db.session.commit()
+    return redirect("/db/movies/")
 
 def bridge_helper(l, home_dict, away_dict):
     c = l.pop(0)
