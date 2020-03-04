@@ -1,5 +1,49 @@
 {% extends "base.html" %}
 {% block title %}{{ actor.name }}{% endblock %}
+{% block modals %}
+<div class = "modal mft" id = "editActor">
+    <div class="modal-background" onclick = "deactivateModal('editActor');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Edit Actor</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('editActor');"></button>
+        </header>
+        <section class="modal-card-body">
+            <script>var editActorSubmitted = false;</script>
+            <form id = "editActorForm" action = "/db/forms/edit-actor/" method = "POST" onsubmit = "if (editActorSubmitted) { return false; } else { if (editActorCheck()) { editActorSubmitted = true; return true; } else { return false; } }"></form>
+            <input type = "hidden" form = "editActorForm" name = "a_id" value = "{{ actor.id }}">
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        {% if actor.is_manual %}
+                        <td><input name = "name" type = "text" class = "input" maxlength = "80" required = "required" form = "editActorForm" value = "{{ actor.name }}"></td>
+                        {% else %}{# Can only edit name if manaully added. #}
+                        <td>{{ actor.name }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Birth Year</td>
+                        <td><input name = "born" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "editActorForm" value = "{% if actor.born %}{{ actor.born }}{% endif %}"></td>
+                    </tr>
+                    <tr>
+                        <td>Death Year</td>
+                        <td><input name = "died" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "editActorForm" value = "{% if actor.died %}{{ actor.died }}{% endif %}"></td>
+                    </tr>
+                    <tr>
+                        <td>Notes</td>
+                        <td><input name = "note" type = "text" class = "input" maxlength = "80" form = "editActorForm" value = "{% if actor.note %}{{ actor.note }}{% endif %}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" type = "submit" form = "editActorForm">Submit</button>
+            <button class = "button is-danger" type = "reset" form = "editActorForm">Cancel</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}
 {% block body %}
 <h3 class = "title is-3">Actor - {{ actor.name }}</h3>
 {% if actor.born %}<p>Born - {{ actor.born }}</p>{% endif %}
@@ -15,7 +59,7 @@
         <span>Copy ID</span>
     </button>
     <button class = "button is-warning is-small">Add Movie</button>
-    <button class = "button is-success is-small">Edit</button>
+    <button class = "button is-success is-small" onclick = "activateModal('editActor');">Edit</button>
     <button class = "button is-danger is-small">Delete</button>
 </div>
 <h5 class = "subtitle is-5">Movies</h5>

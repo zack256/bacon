@@ -1,5 +1,45 @@
 {% extends "base.html" %}
 {% block title %}{{ movie.name }}{% endblock %}
+{% block modals %}
+<div class = "modal mft" id = "editMovie">
+    <div class="modal-background" onclick = "deactivateModal('editMovie');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Edit Movie</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('editMovie');"></button>
+        </header>
+        <section class="modal-card-body">
+            <script>var editMovieSubmitted = false;</script>
+            <form id = "editMovieForm" action = "/db/forms/edit-movie/" method = "POST" onsubmit = "if (editMovieSubmitted) { return false; } else { if (editMovieCheck()) { editMovieSubmitted = true; return true; } else { return false; } }"></form>
+            <input type = "hidden" form = "editMovieForm" name = "m_id" value = "{{ movie.id }}">
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Title</td>
+                        {% if movie.is_manual %}
+                        <td><input name = "title" type = "text" class = "input" maxlength = "80" required = "required" form = "editMovieForm" value = "{{ movie.title }}"></td>
+                        {% else %}{# Can only edit title if manaully added. #}
+                        <td>{{ movie.title }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Year</td>
+                        <td><input name = "year" type = "text" class = "input" maxlength = "4" pattern = "^([0-9]{4})?$" form = "editMovieForm" value = "{% if movie.year %}{{ movie.year }}{% endif %}"></td>
+                    </tr>
+                    <tr>
+                        <td>Notes</td>
+                        <td><input name = "note" type = "text" class = "input" maxlength = "80" form = "editMovieForm" value = "{% if movie.note %}{{ movie.note }}{% endif %}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" type = "submit" form = "editMovieForm">Submit</button>
+            <button class = "button is-danger" type = "reset" form = "editMovieForm">Cancel</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}
 {% block body %}
 <h3 class = "title is-3">{{ movie.title }}</h3>
 {% if movie.year %}<p>Year - {{ movie.year }}</p>{% endif %}
@@ -14,7 +54,7 @@
         <span>Copy ID</span>
     </button>
     <button class = "button is-warning is-small">Add Actor</button>
-    <button class = "button is-success is-small">Edit</button>
+    <button class = "button is-success is-small" onclick = "activateModal('editMovie');">Edit</button>
     <button class = "button is-danger is-small">Delete</button>
 </div>
 <h5 class = "subtitle is-5">Actors</h5>

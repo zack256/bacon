@@ -176,6 +176,51 @@ def db_add_movie_form_handle():
     db.session.commit()
     return redirect("/db/movies/{}/".format(movie.id))
 
+def edit_a_year(given, former):
+    try:
+        given = int(given)
+        return given    # year is valid.
+    except:
+        if given == "":
+            return None     # blanking the year.
+        else:
+            return former   # invalid year, reverting to what is already there.
+
+@app.route("/db/forms/edit-actor/", methods = ["POST"])
+def db_edit_actor_form_handle():
+    a_id = request.form["a_id"]
+    actor = AutoActor.query.get(int(a_id))
+    if actor == None:
+        return "Actor doesn't exist!"
+    if actor.is_manual:
+        name = request.form["name"]
+        if name == "":
+            return "Name can't be blank!"
+        actor.name = name
+    actor.born = edit_a_year(request.form["born"], actor.born)
+    actor.died = edit_a_year(request.form["died"], actor.died)
+    note = request.form["note"]
+    actor.note = note
+    db.session.commit()
+    return redirect("/db/actors/{}/".format(actor.id))
+
+@app.route("/db/forms/edit-movie/", methods = ["POST"])
+def db_edit_movie_form_handle():
+    m_id = request.form["m_id"]
+    movie = AutoMovie.query.get(int(m_id))
+    if movie == None:
+        return "Movie doesn't exist!"
+    if movie.is_manual:
+        title = request.form["title"]
+        if title == "":
+            return "Title can't be blank!"
+        movie.title = title
+    movie.year = edit_a_year(request.form["year"], movie.year)
+    note = request.form["note"]
+    movie.note = note
+    db.session.commit()
+    return redirect("/db/movies/{}/".format(movie.id))
+
 def bridge_helper(l, home_dict, away_dict):
     c = l.pop(0)
     if c > 0:   # Actor

@@ -11,3 +11,9 @@ function addMovieCheck () {
 function addRoleCheck () {
     return checkBase("Add Role?");
 }
+function editActorCheck () {
+    return checkBase("Edit Actor?");
+}
+function editMovieCheck () {
+    return checkBase("Edit Movie?");
+}
