@@ -21,13 +21,17 @@
     <div class = "column">
         <h5 class = "subtitle is-5">Results</h5>
         <div class = "content">
-            {% if case == 1 %}{# Invalid actor(s). Case 0 is skipped because nothing is displayed. #}
+            {% if case == 0 %}{# Case 0 : no actors specified #}
+            <p>Enter two Actor IDs and press "Find Connections"!</p>
+            {% elif case == 1 %}{# Invalid actor(s). Case 0 is skipped because nothing is displayed. #}
             <p>One or both of the IDs entered had no matches in the database.</p>
             {% elif case == 2 %}{# Same actors. #}
             <p><a href = "/db/actors/{{ path_list[0].id }}/">{{ path_list[0].name }}</a> has a degree of 0 with <a href = "/db/actors/{{ path_list[0].id }}/">{{ path_list[0].name }}</a>!</p>
             {% elif case == 4 %}{# No connection found. #}
             <p>There was no connection found in the database between <a href = "/db/actors/{{ path_list[0].id }}/">{{ path_list[0].name }}</a> and <a href = "/db/actors/{{ path_list[1].id }}/">{{ path_list[1].name }}</a>.</p>
             {% else %}{# Case 3 : Successful connection found. #}
+            {% set degrees = ((path_list|length - 1) / 2) | int %}
+            <p><a href = "/db/actors/{{ path_dict[path_list[0]].id }}/">{{ path_dict[path_list[0]].name }}</a> has a degree of {{ degrees }} with <a href = "/db/actors/{{ path_dict[path_list[-1]].id }}/">{{ path_dict[path_list[-1]].name }}</a>!</p>
             <ul>
             {% for idx in range(path_list|length) %}
             {% set node_id = path_list[idx] %}
