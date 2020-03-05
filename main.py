@@ -370,6 +370,49 @@ def ajax_get_actor():
         res = "No actor was found with that ID!"
     return jsonify(actor = res, a_id = a_id, success = not fail)
 
+@app.route("/db/ajax/get-movie/")
+def ajax_get_movie():
+    m_id = request.args.get("m_id", 0, int)
+    fail = False
+    if m_id == 0:
+        fail = True
+    else:
+        movie = AutoMovie.query.get(m_id)
+        if movie:
+            res = movie.title
+        else:
+            fail = True
+    if fail:
+        res = "No movie was found with that ID!"
+    return jsonify(movie = res, m_id = m_id, success = not fail)
+
+@app.route("/db/forms/add-role/", methods = ["POST"])
+def db_add_role_form_handle():
+    fail = False
+    try:
+        a_id = int(request.form["a_id"])
+        m_id = int(request.form["m_id"])
+    except:
+        fail = True
+    actor = AutoMovie.query.get(int(m_id))
+    movie = AutoMovie.query.get(int(m_id))
+    if actor == None or movie == None:
+        fail = True
+    if fail:
+        return "Invalid ID(s)."
+    if AutoRole.query.filter((AutoRole.actor_id == a_id) & (AutoRole.movie_id == m_id)).first():
+        return "Role already exists!"
+    coming_from = request.form["from"]
+    role = AutoRole()
+    role.actor_id = a_id
+    role.movie_id = m_id
+    role.is_manual = True
+    db.session.add(role)
+    db.session.commit()
+    if coming_from == "actor":
+        return redirect("/db/actors/{}/".format(a_id))
+    return redirect("/db/movies/{}/".format(m_id))
+
 
 
 

@@ -39,3 +39,35 @@ function deleteMovieCheck (mode) {
         return checkBase("Delete Movie?");
     }
 }
+function addRoleCheck (forActor, already) {
+    var nID;
+    if (forActor) {
+        nID = document.getElementById("movieIDInput").value;
+    } else {
+        nID = document.getElementById("actorIDInput").value;
+    }
+    if (isNaN(nID) || nID == "") {
+        alert("Invalid input.");
+        return false;
+    }
+    if (already.includes(parseInt(nID))) {
+        alert("Role is already in database.");
+        return false;
+    }
+    return checkBase("Add Role?");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
