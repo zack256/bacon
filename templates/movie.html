@@ -39,6 +39,42 @@
         </footer>
     </div>
 </div>
+<div class = "modal mft" id = "connectActor">
+    <div class="modal-background" onclick = "deactivateModal('connectActor');"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Actor Role</p>
+            <button class="delete" aria-label="close" onclick = "deactivateModal('connectActor');"></button>
+        </header>
+        <section class="modal-card-body">
+            <script>var actorArr = [{% for actor in actors %}{{ actor.id }},{% endfor %}];</script>
+            <script>var connectActorSubmitted = false;</script>
+            <form id = "connectActorForm" action = "/db/forms/add-role/" method = "POST" onsubmit = "if (connectActorSubmitted) { return false; } else { if (addRoleCheck(false, actorArr)) { connectActorSubmitted = true; return true; } else { return false; } }"></form>
+            <input type = "hidden" form = "connectActorForm" name = "m_id" value = "{{ movie.id }}">
+            <input type = "hidden" form = "connectActorForm" name = "from" value = "movie">
+            <table class = "table is-striped is-fullwidth">
+                <tbody>
+                    <tr>
+                        <td>Movie</td>
+                        <td>{{ movie.title }}</td>
+                    </tr>
+                    <tr>
+                        <td>Actor <a href = "/db/actors/" target = "_blank">(search)</a></td>
+                        <td><input name = "a_id" type = "text" class = "input" form = "connectActorForm" placeholder = "Enter an Actor's ID." id = "actorIDInput" autocomplete = "off"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td id = "actorNameMsg"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer class="modal-card-foot">
+            <button class = "button is-success" type = "submit" form = "connectActorForm">Submit</button>
+            <button class = "button is-danger" type = "reset" form = "connectActorForm" onclick = "resetAddRole(false);">Cancel</button>
+        </footer>
+    </div>
+</div>
 {% endblock %}
 {% block body %}
 <h3 class = "title is-3">{{ movie.title }}</h3>
@@ -53,7 +89,7 @@
         </span>
         <span>Copy ID</span>
     </button>
-    <button class = "button is-warning is-small">Add Actor</button>
+    <button class = "button is-warning is-small" onclick = "activateModal('connectActor');">Add Actor</button>
     <button class = "button is-success is-small" onclick = "activateModal('editMovie');">Edit</button>
     <script>var deleteMovieSubmitted = false;</script>
     <form id = "deleteMovieForm" action = "/db/forms/delete-movie/" method = "POST" onsubmit = "if (deleteMovieSubmitted) { return false; } else { if (deleteMovieCheck({{ delete_mode }})) { deleteMovieSubmitted = true; return true; } else { return false; } }"></form>
@@ -81,4 +117,30 @@
 <p>This movie was one of the many imported to the database initially.</p>
 {% endif %}
 <h5 class = "subtitle is-5"><a href = "/db/">Database Home</a> | <a href = "/db/movies/">All Movies</a></h5>
+{% endblock %}
+{% block more_bottom %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src = "/assets/js/add_role.js"></script>
+<script type = "text/javascript">
+    $SCRIPT_ROOT = "";
+    var ajaxUrl = $SCRIPT_ROOT + '/db/ajax/get-actor/';
+    var query;
+</script>
+<script type=text/javascript>
+    $(function() {
+        $('input#actorIDInput').bind('keyup', function() {
+            query = $("#actorIDInput").val();
+            if (query == "") {
+                resetAddRole(false);
+            } else {
+                $.getJSON(ajaxUrl, {
+                    a_id: query
+                }, function(data) {
+                    setAddRoleMsg(false, data.actor, data.a_id, data.success);
+                });
+            }
+            return false;
+        });
+    });
+</script>
 {% endblock %}

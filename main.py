@@ -394,7 +394,7 @@ def db_add_role_form_handle():
         m_id = int(request.form["m_id"])
     except:
         fail = True
-    actor = AutoMovie.query.get(int(m_id))
+    actor = AutoActor.query.get(int(a_id))
     movie = AutoMovie.query.get(int(m_id))
     if actor == None or movie == None:
         fail = True
