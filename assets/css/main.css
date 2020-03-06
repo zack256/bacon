@@ -19,3 +19,6 @@ body {
 .hidden {
     display : none;
 }
+.footerTabs {
+    margin-top : 1.5em;
+}
