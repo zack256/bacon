@@ -115,14 +115,13 @@
         {% for movie_l in movies %}
         {% set movie = movie_l[0] %}
         <tr id = "roleRow{{ movie.id }}">
-            <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.format_title() }}</a></td>
+            <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.title }}</a></td>
             <td>
                 {% if movie_l[1] %}
                 <button class="button is-danger is-small" onclick = "initDeleteRole('{{ movie.id }}');">
                     <span class="icon">
                         <i class="fa fa-times"></i>
                     </span>
-                    <span>Delete</span>
                 </button>
                 {% endif %}
             </td>
