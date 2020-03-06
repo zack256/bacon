@@ -23,3 +23,11 @@ function setAddRoleMsg (forActor, name, nID, success) {
         }
     }
 }
+function initDeleteRole (nodeID) {
+    document.getElementById("ajaxID").value = nodeID;
+    document.getElementById("deleteRoleAjaxButton").click();
+}
+function deleteRoleRow (nodeID) {
+    var rowID = "roleRow" + nodeID;
+    document.getElementById(rowID).remove();
+}

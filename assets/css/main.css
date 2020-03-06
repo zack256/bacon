@@ -16,3 +16,6 @@ body {
     position : absolute;
     left : -9999px; /* display : none and type = "hidden" did not let auto-copy. */
 }
+.hidden {
+    display : none;
+}

@@ -51,7 +51,7 @@
             <button class="delete" aria-label="close" onclick = "deactivateModal('connectMovie');"></button>
         </header>
         <section class="modal-card-body">
-            <script>var movieArr = [{% for movie in movies %}{{ movie.id }},{% endfor %}];</script>
+            <script>var movieArr = [{% for movie_l in movies %}{{ movie_l[0].id }},{% endfor %}];</script>
             <script>var connectMovieSubmitted = false;</script>
             <form id = "connectMovieForm" action = "/db/forms/add-role/" method = "POST" onsubmit = "if (connectMovieSubmitted) { return false; } else { if (addRoleCheck(true, movieArr)) { connectMovieSubmitted = true; return true; } else { return false; } }"></form>
             <input type = "hidden" form = "connectMovieForm" name = "a_id" value = "{{ actor.id }}">
@@ -100,18 +100,32 @@
     <form id = "deleteActorForm" action = "/db/forms/delete-actor/" method = "POST" onsubmit = "if (deleteActorSubmitted) { return false; } else { if (deleteActorCheck({{ delete_mode }})) { deleteActorSubmitted = true; return true; } else { return false; } }"></form>
     <input form = "deleteActorForm" name = "a_id" value = "{{ actor.id }}" type = "hidden">
     <button class = "button is-danger is-small" type = "submit" form = "deleteActorForm">Delete</button>
+    <button class = "hidden" id = "deleteRoleAjaxButton"></button>
+    <input type = "hidden" id = "ajaxID">
 </div>
 <h5 class = "subtitle is-5">Movies</h5>
 <table class = "table is-striped">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Title</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        {% for movie in movies %}
-        <tr>
+        {% for movie_l in movies %}
+        {% set movie = movie_l[0] %}
+        <tr id = "roleRow{{ movie.id }}">
             <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.format_title() }}</a></td>
+            <td>
+                {% if movie_l[1] %}
+                <button class="button is-danger is-small" onclick = "initDeleteRole('{{ movie.id }}');">
+                    <span class="icon">
+                        <i class="fa fa-times"></i>
+                    </span>
+                    <span>Delete</span>
+                </button>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -128,8 +142,10 @@
 <script src = "/assets/js/add_role.js"></script>
 <script type = "text/javascript">
     $SCRIPT_ROOT = "";
-    var ajaxUrl = $SCRIPT_ROOT + '/db/ajax/get-movie/';
+    var getMovieAjaxUrl = $SCRIPT_ROOT + '/db/ajax/get-movie/';
+    var deleteRoleAjaxUrl = $SCRIPT_ROOT + '/db/ajax/delete-role/';
     var query;
+    var m_id;
 </script>
 <script type=text/javascript>
     $(function() {
@@ -138,10 +154,30 @@
             if (query == "") {
                 resetAddRole(true);
             } else {
-                $.getJSON(ajaxUrl, {
+                $.getJSON(getMovieAjaxUrl, {
                     m_id: query
                 }, function(data) {
                     setAddRoleMsg(true, data.movie, data.m_id, data.success);
+                });
+            }
+            return false;
+        });
+    });
+</script>
+<script type=text/javascript>
+    $(function() {
+        $('button#deleteRoleAjaxButton').bind('click', function() {
+            m_id = $("#ajaxID").val();
+            if (deleteRoleCheck()) {
+                $.getJSON(deleteRoleAjaxUrl, {
+                    a_id: "{{ actor.id }}",
+                    m_id: m_id
+                }, function(data) {
+                    if (data.success) {
+                        deleteRoleRow(m_id);
+                    } else {
+                        alert("Failed to delete - could be already deleted!")
+                    }
                 });
             }
             return false;

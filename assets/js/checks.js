@@ -56,6 +56,9 @@ function addRoleCheck (forActor, already) {
     }
     return checkBase("Add Role?");
 }
+function deleteRoleCheck () {
+    return checkBase("Delete Role?");
+}
 
 
 

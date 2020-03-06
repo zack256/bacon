@@ -70,7 +70,7 @@ def db_actor_pg_handle(aid):
     actor = AutoActor.query.get(aid)
     if actor == None:
         return "Actor not found!"
-    movies = sorted([role.movie for role in actor.movies], key = lambda x : [x.title])
+    movies = sorted([[role.movie, role.is_manual] for role in actor.movies], key = lambda x : [x[0].title])
     if not actor.is_manual: # delete_mode is used to tell the user if the actor/movie can be deleted.
         delete_mode = 0     # 0 : can't be deleted as it came from the original import, and its better if those aren't deleted.
     elif movies != []:
@@ -85,7 +85,7 @@ def db_movie_pg_handle(mid):
     movie = AutoMovie.query.get(mid)
     if movie == None:
         return "Movie not found!"
-    actors = sorted([role.actor for role in movie.actors], key = lambda x : [x.name])
+    actors = sorted([[role.actor, role.is_manual] for role in movie.actors], key = lambda x : [x[0].name])
     if not movie.is_manual:
         delete_mode = 0
     elif actors != []:
@@ -413,7 +413,24 @@ def db_add_role_form_handle():
         return redirect("/db/actors/{}/".format(a_id))
     return redirect("/db/movies/{}/".format(m_id))
 
-
+@app.route("/db/ajax/delete-role/")
+def ajax_delete_role():
+    a_id = request.args.get("a_id", 0, int)
+    m_id = request.args.get("m_id", 0, int)
+    fail = False
+    if a_id == 0 or m_id == 0:
+        fail = True
+    else:
+        role = AutoRole.query.filter((AutoRole.actor_id == a_id) & (AutoRole.movie_id == m_id)).first()
+        if role == None:
+            fail = True
+        else:
+            if not role.is_manual:
+                fail = True
+            else:
+                db.session.delete(role)
+                db.session.commit()
+    return jsonify(success = not fail)
 
 
 
