@@ -114,7 +114,7 @@
     <tbody>
         {% for movie_l in movies %}
         {% set movie = movie_l[0] %}
-        <tr id = "roleRow{{ movie.id }}">
+        <tr id = "roleRow{{ movie.id }}" class = "roleRow">
             <td><a href = "/db/movies/{{ movie.id }}/">{{ movie.title }}</a></td>
             <td>
                 {% if movie_l[1] %}

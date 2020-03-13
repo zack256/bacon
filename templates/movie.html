@@ -109,7 +109,7 @@
     <tbody>
         {% for actor_l in actors %}
         {% set actor = actor_l[0] %}
-        <tr id = "roleRow{{ actor.id }}">
+        <tr id = "roleRow{{ actor.id }}" class = "roleRow">
             <td><a href = "/db/actors/{{ actor.id }}/">{{ actor.name }}</a></td>
             <td>
                 {% if actor_l[1] %}

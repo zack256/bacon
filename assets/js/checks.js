@@ -21,22 +21,28 @@ function deleteActorCheck (mode) {
     if (mode == 0) {
         alert("Can't delete an actor that was initially added to the database.");
         return false;
-    } else if (mode == 1) {
-        alert("Can't delete an actor that was has movies, to prevent accidents. Please delete each role manually.");
-        return false;
     } else {
-        return checkBase("Delete Actor?");
+        var roles = document.getElementsByClassName("roleRow");
+        if (roles.length != 0) {
+            alert("Can't delete an actor that has movies, to prevent accidents. Please delete each role manually.");
+            return false;
+        } else {
+            return checkBase("Delete Actor?");
+        }
     }
 }
 function deleteMovieCheck (mode) {
     if (mode == 0) {
         alert("Can't delete a movie that was initially added to the database.");
         return false;
-    } else if (mode == 1) {
-        alert("Can't delete a movie that was has actors, to prevent accidents. Please delete each role manually.");
-        return false;
     } else {
-        return checkBase("Delete Movie?");
+        var roles = document.getElementsByClassName("roleRow");
+        if (roles.length != 0) {
+            alert("Can't delete a movie that has actors, to prevent accidents. Please delete each role manually.");
+            return false;
+        } else {
+            return checkBase("Delete Movie?");
+        }
     }
 }
 function addRoleCheck (forActor, already) {
